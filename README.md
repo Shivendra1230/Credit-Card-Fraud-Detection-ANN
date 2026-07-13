@@ -1,3 +1,16 @@
+
+![Python](https://img.shields.io/badge/Python-3.12-blue)
+
+![TensorFlow](https://img.shields.io/badge/TensorFlow-2.21-orange)
+
+![Streamlit](https://img.shields.io/badge/Streamlit-Live-red)
+
+![License](https://img.shields.io/badge/License-MIT-green)
+
+
+
+
+
 # 💳 Credit Card Fraud Detection using Artificial Neural Network (ANN)
 
 An end-to-end Machine Learning project that detects fraudulent credit card transactions using an Artificial Neural Network (ANN). The project includes data preprocessing, hyperparameter tuning, threshold tuning, model evaluation, and a professional Streamlit web application for real-time predictions.
@@ -117,7 +130,7 @@ The application provides:
 Clone the repository
 
 ```bash
-git clone https://github.com/yourusername/Credit-Card-Fraud-Detection.git
+git clone https://github.com/Shivendra1230/Credit-Card-Fraud-Detection-ANN.git
 ```
 
 Move into project
@@ -184,9 +197,13 @@ streamlit run app.py
 
 B.Tech Computer Science Engineering
 
-Artificial Intelligence & Machine Learning Enthusiast
+Machine Learning | Deep Learning | Generative AI
 
----
+GitHub: https://github.com/Shivendra1230
+
+
+LinkedIn:  www.linkedin.com/in/shivendra-pratap-singh-8bab22237
+
 
 ## ⭐ If you like this project
 
