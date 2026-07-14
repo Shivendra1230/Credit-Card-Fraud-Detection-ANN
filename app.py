@@ -332,6 +332,21 @@ elif page == "📂 CSV Upload":
         "Upload a CSV file containing credit card transactions to predict fraud."
     )
 
+    # --------------------------------------------------
+    # Download Sample CSV
+    # --------------------------------------------------
+
+    sample_df = pd.read_csv("data/demo_transactions.csv").head(10)
+
+    st.download_button(
+        label="📥 Download Sample CSV",
+        data=sample_df.to_csv(index=False).encode("utf-8"),
+        file_name="sample_transactions.csv",
+        mime="text/csv"
+    )
+
+    st.divider()
+
     uploaded_file = st.file_uploader(
         "Choose CSV File",
         type=["csv"]
@@ -339,90 +354,134 @@ elif page == "📂 CSV Upload":
 
     if uploaded_file is not None:
 
-        df = pd.read_csv(uploaded_file)
+        try:
 
-        st.subheader("Dataset Preview")
+            df = pd.read_csv(uploaded_file)
 
-        st.dataframe(df.head())
+            required_columns = [
+                "Time",
+                "V1","V2","V3","V4","V5","V6","V7","V8","V9","V10",
+                "V11","V12","V13","V14","V15","V16","V17","V18","V19",
+                "V20","V21","V22","V23","V24","V25","V26","V27","V28",
+                "Amount"
+            ]
 
-        st.write(f"Rows : {df.shape[0]}")
-        st.write(f"Columns : {df.shape[1]}")
+            missing = [
+                col
+                for col in required_columns
+                if col not in df.columns
+            ]
 
-        if st.button("🚀 Predict"):
+            if len(missing) > 0:
 
-            X = df.drop(columns=["Class"], errors="ignore")
+                st.error("❌ Invalid CSV Format")
 
-            X_scaled = scaler.transform(X)
+                st.warning(
+                    "Missing Columns:\n\n"
+                    + ", ".join(missing)
+                )
 
-            probability = model.predict(
-                X_scaled,
-                verbose=0
-            ).flatten()
+                st.info(
+                    "Download the sample CSV and use the same format."
+                )
 
-            threshold = 0.99
+                st.stop()
 
-            prediction = np.where(
+            st.success("✅ Valid CSV Uploaded")
 
-                probability > threshold,
-
-                "Fraud",
-
-                "Genuine"
-
-            )
-
-            df["Fraud Probability"] = probability
-
-            df["Prediction"] = prediction
-
-            fraud = (prediction == "Fraud").sum()
-
-            genuine = (prediction == "Genuine").sum()
-
-            st.divider()
-
-            c1, c2, c3 = st.columns(3)
-
-            c1.metric(
-
-                "Transactions",
-
-                len(df)
-
-            )
-
-            c2.metric(
-
-                "Fraud",
-
-                fraud
-
-            )
-
-            c3.metric(
-
-                "Genuine",
-
-                genuine
-
-            )
-
-            st.subheader("Prediction Result")
+            st.subheader("Dataset Preview")
 
             st.dataframe(df.head())
 
-            csv = df.to_csv(index=False).encode("utf-8")
+            c1, c2 = st.columns(2)
 
-            st.download_button(
+            c1.metric(
+                "Rows",
+                df.shape[0]
+            )
 
-                "📥 Download Prediction CSV",
+            c2.metric(
+                "Columns",
+                df.shape[1]
+            )
 
-                csv,
+            st.divider()
 
-                "predictions.csv",
+            if st.button("🚀 Predict Fraud"):
 
-                "text/csv"
+                X = df[required_columns]
 
+                X_scaled = scaler.transform(X)
+
+                probability = model.predict(
+                    X_scaled,
+                    verbose=0
+                ).flatten()
+
+                threshold = 0.99
+
+                prediction = np.where(
+                    probability > threshold,
+                    "Fraud",
+                    "Genuine"
+                )
+
+                df["Fraud Probability"] = probability
+
+                df["Prediction"] = prediction
+
+                fraud = (prediction == "Fraud").sum()
+
+                genuine = (prediction == "Genuine").sum()
+
+                st.subheader("📊 Prediction Summary")
+
+                col1, col2, col3 = st.columns(3)
+
+                col1.metric(
+                    "Transactions",
+                    len(df)
+                )
+
+                col2.metric(
+                    "Fraud",
+                    fraud
+                )
+
+                col3.metric(
+                    "Genuine",
+                    genuine
+                )
+
+                st.progress(
+                    fraud / len(df)
+                )
+
+                st.info(
+                    f"Fraud Rate : {(fraud/len(df))*100:.2f}%"
+                )
+
+                st.divider()
+
+                st.subheader("Prediction Result")
+
+                st.dataframe(df)
+
+                st.download_button(
+                    label="📥 Download Prediction CSV",
+                    data=df.to_csv(index=False).encode("utf-8"),
+                    file_name="prediction_results.csv",
+                    mime="text/csv"
+                )
+
+                st.success(
+                    "Prediction Completed Successfully ✅"
+                )
+
+        except Exception as e:
+
+            st.error(
+                f"Error while processing file:\n\n{e}"
             )
 
 
