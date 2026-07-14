@@ -336,7 +336,7 @@ elif page == "📂 CSV Upload":
     # Download Sample CSV
     # --------------------------------------------------
 
-    sample_df = pd.read_csv("data/demo_transactions.csv").head(10)
+    sample_df = pd.read_csv("demo_transactions.csv").head(10)
 
     st.download_button(
         label="📥 Download Sample CSV",
