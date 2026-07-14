@@ -19,7 +19,7 @@ An end-to-end Machine Learning project that detects fraudulent credit card trans
 
 ## 🚀 Live Demo
 
-Coming Soon...
+https://credit-card-fraud-detection-ann.onrender.com/
 
 ---
 
